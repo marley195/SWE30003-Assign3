@@ -1,7 +1,38 @@
+using System.Collections.Generic;
+
 namespace RelaxingKoala
 {
-        public class Order
+       public class Order : ISubject
     {
+        private List<IObserver> observers;
+        public enum State {OrderPlaced, OrderProcessed, OrderCompleted, OrderCancelled};
+        public Order(int orderId, int customerId)
+        {
+            OrderId = orderId;
+            CustomerId = customerId;
+            observers = new List<IObserver>();
+            OrderState = State.OrderPlaced;
+        }
+
+        public void AttachObserver(IObserver observer)
+        {
+            observers.Add(observer);
+        }
+        public void DetachObserver(IObserver observer)
+        {
+            observers.Remove(observer);
+        }
+        public void NotifyObserver()
+        {
+            foreach (var observer in observers)
+            {
+                observer.Update(this);
+            }
+        }
+
+
+        public State OrderState {get; set;}
+
         public int OrderId { get; set; }
         public int CustomerId { get; set; }
         public List<MenuItem> Items { get; set; } = new List<MenuItem>();

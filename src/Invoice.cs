@@ -1,4 +1,4 @@
-namespace RelaxingKoala.
+namespace RelaxingKoala
 {
     public class Invoice
     {
