@@ -1,50 +1,101 @@
+using System.Globalization;
 using System.Security.Cryptography.X509Certificates;
+using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace RelaxingKoala
 {
     public class TableManger
     {
-        private Dictionary<int, Table> tables;
+        private List<Table> tables;
 
         public TableManger()
         {
-            tables = new Dictionary<int, Table>();
+            tables = new List<Table>();
         }
         // Add table to the dictionary of tables
         public void AddTable(int tableID, int capacity)
         {
             Table table = new Table(tableID, capacity);
-            tables.Add(tableID, table);
+            tables.Add(table);
+            writeTables();
+        }
+
+        public void writeTables()
+        {
+            using (var writer = new StreamWriter("tables.csv"))
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(tables);
+            }
+        }
+
+        public void readTables()
+        {
+            if(!File.Exists("tables.csv"))
+            {
+                return;
+            }
+            using (var reader = new StreamReader("tables.csv"))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+                {
+                    HeaderValidated = null,
+                    MissingFieldFound = null
+                };
+                csv.Context.RegisterClassMap<TableMap>();
+                tables = csv.GetRecords<Table>().ToList();
+            }
+        }
+
+        public void UpdateTableFile(Table table)
+        {
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                HasHeaderRecord = false,
+            };
+            using (var stream = File.Open("tables.csv", FileMode.Append))
+            using (var writer = new StreamWriter(stream))
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(tables);
+            }
         }
         // Remove table from the dictionary of tables   
-        public void RemoveTable(int tableID)
+        public void RemoveTable(Table table)
         {
-            tables.Remove(tableID);
+            tables.Remove(table);
         }
         //Return a table by its TableID
         public Table GetTableByID(int tableID)
         {
             return tables[tableID];
         }
+        public Table? GetTableByCapacity(int capacity)
+        {
+                return tables.First(table => table.Capacity == capacity);
+        }
+
         // Display all Tables where TableID, Capacity and TableStatus are shown. - For Staff
         public void DisplayTables()
         {
             foreach (var table in tables)
             {
-                Console.WriteLine($"Table ID: {table.Value.TableID}, Capacity: {table.Value.Capacity}, Status: {table.Value.TableStatus}");
+                Console.WriteLine($"Table ID: {table.TableID}, Capacity: {table.Capacity}, Status: {table.TableStatus}");
             }
         }
         //Find the first available table with the capacity to accommodate the number of guests.
         public Table? FindAvailableTable(int capacity)
         {
-            return tables.Values.FirstOrDefault(table => table.TableStatus == Table.Status.Available && table.Capacity >= capacity);
+            return tables.FirstOrDefault(table => table.TableStatus == Table.Status.Available && table.Capacity >= capacity);
         }
         //Reserve Table based on TableID.
-        public void ReserveTable(int tableID)
+        public void ReserveTable(Table table)
         {
-            if(tables.ContainsKey(tableID))
+            if(table != null)
             {
-                tables[tableID].TableStatus = Table.Status.Reserved;
+                table.TableStatus = Table.Status.Reserved;
             }
             else
             {
@@ -52,11 +103,11 @@ namespace RelaxingKoala
             }
         }
         //Change Table status to Occupied based on TableID.
-        public void OccupyTable(int tableID)
+        public void OccupyTable(Table table)
         {
-            if(tables.ContainsKey(tableID))
+            if(table != null)
             {
-                tables[tableID].TableStatus = Table.Status.Occupied;
+                table.TableStatus = Table.Status.Occupied;
             }
             else
             {
@@ -64,11 +115,11 @@ namespace RelaxingKoala
             }
         }
         //Release Table based on TableID.
-        public void ReleaseTable(int tableID)
+        public void ReleaseTable(Table table)
         {
-            if(tables.ContainsKey(tableID))
+            if(table != null)
             {
-                tables[tableID].TableStatus = Table.Status.Available;
+                table.TableStatus = Table.Status.Available;
             }
             else
             {
@@ -78,7 +129,7 @@ namespace RelaxingKoala
         //return a list of all available tables.
         public List<Table> ListAvailableTables()
         {
-            return tables.Values.Where(table => table.TableStatus == Table.Status.Available).ToList();
+            return tables.Where(table => table.TableStatus == Table.Status.Available).ToList();
         } 
         
     }

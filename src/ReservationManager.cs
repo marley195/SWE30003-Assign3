@@ -3,20 +3,26 @@ namespace RelaxingKoala
     public class ReservationManager
     {
         private List<Reservation> Reservations;
-        private int ReservationID;
 
         public ReservationManager()
         {
             Reservations = new List<Reservation>();
-            ReservationID = 1;
+
         }
 
-        public Reservation CreateReservation(int customerID, Table table, DateTime reservationTime, int numberOfGuests)
+        public Reservation CreateReservation(int customerID, TableManger tableManger, DateTime reservationTime, int numberOfGuests)
         {
+            Table table = tableManger.FindAvailableTable(numberOfGuests);
             Reservation reservation = new Reservation( customerID, table.TableID, reservationTime, numberOfGuests);
-            table.TableStatus = Table.Status.Reserved;
+
             Reservations.Add(reservation);
             return reservation;
+        }
+
+
+        public void RemoveReservation(int reservationID)
+        {
+            Reservations.RemoveAll(res => res.ReservationId == reservationID);
         }
 
         public void DisplayReservations()
@@ -35,11 +41,6 @@ namespace RelaxingKoala
         public Reservation? GetReservationByCustomer(int customerID)
         {
             return Reservations.SingleOrDefault(res => res.CustomerId == customerID);
-        }
-
-        public void RemoveReservation(int reservationID)
-        {
-            Reservations.RemoveAll(res => res.ReservationId == reservationID);
         }
     }
 }

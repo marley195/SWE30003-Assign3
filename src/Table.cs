@@ -9,15 +9,25 @@ namespace RelaxingKoala
             Occupied
         }
 
-        public Table(int tableID, int capacity)
-        {
-            this.TableID = tableID;
-            this.Capacity = capacity;
-            this.TableStatus = Status.Available;
-        }
-
         public Status TableStatus {get; set;}
         public int TableID { get; set; }
         public int Capacity { get; set; }
+
+        public Table()
+        {
+        }
+        public Table(int tableID, int capacity)
+        {
+            TableID = tableID;
+            Capacity = capacity;
+            TableStatus = Status.Available;
+        }
+
+        public Table(int tableID, string tStatus, int capacity)
+        {
+            TableID = tableID;
+            Capacity = capacity;
+            TableStatus = (Status)Enum.Parse(typeof(Status), tStatus);
+        }
     }
 }

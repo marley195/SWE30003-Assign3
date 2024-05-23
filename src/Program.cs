@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using CsvHelper;
 
 namespace RelaxingKoala
 {
@@ -17,10 +18,9 @@ namespace RelaxingKoala
             var order = new Order (1,1);
             var menuItem = new MenuItem { MenuItemId = 1, Name = "Pizza", Price = 15.99M };
             //Temporary to Generate Tables for testing
-            for (int i = 0; i < 10; i++)
-            {
-                tableManager.AddTable(i, RandomNumberGenerator.GetInt32(1, 5));
-            }
+
+            tableManager.readTables();
+
             //Loop for Reservation + table system.
             while (!exit)
             {
@@ -48,8 +48,8 @@ namespace RelaxingKoala
                         Console.WriteLine("Enter your contact number: ");
                         string? contact = Console.ReadLine();
                         customer = new Customer(name, contact, "No requirements");
-                        reservationManager.CreateReservation(customer.CustomerId, table, DateTime.Now.AddHours(2), guests);
-                        tableManager.ReserveTable(table.TableID);
+                        reservationManager.CreateReservation(customer.CustomerId, tableManager, DateTime.Now.AddHours(2), guests);
+                        tableManager.ReserveTable(table);
                         Console.WriteLine($"Table {table.TableID} reserved for {guests} guests");
                     }
                     else
