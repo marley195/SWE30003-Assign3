@@ -9,9 +9,9 @@ namespace RelaxingKoala
         public List<Order> Orders { get; set; } = new List<Order>();
 
         // Constructor to initialize a new customer with essential details
-        public Customer(int id, string name, string contactNumber, string requirements = "")
+        public Customer( string name, string contactNumber, string requirements = "")
         {
-            CustomerId = id;
+            CustomerId++;
             Name = name;
             ContactNumber = contactNumber;
             Requirements = requirements;
@@ -25,8 +25,8 @@ namespace RelaxingKoala
         {
             Console.WriteLine($"Customer ID: {CustomerId}, Name: {Name}, Contact: {ContactNumber}");
             Console.WriteLine("Reservations:");
-            Reservation Reservations = reservationManager.GetReservationByCustomer(CustomerId);
-            Console.WriteLine($"   Reservation ID: {Reservations.ReservationId}, Table ID: {Reservations.TableId}, Time: {Reservations.ReservationTime}, Guests: {Reservations.NumberOfGuests}");
+            Reservation? Reservations = reservationManager.GetReservationByCustomer(CustomerId);
+            Console.WriteLine($" Reservation ID: {Reservations.ReservationId}, Table ID: {Reservations.TableId}, Time: {Reservations.ReservationTime}, Guests: {Reservations.NumberOfGuests}");
             Console.WriteLine("Orders:");
             foreach (var order in Orders)
             {

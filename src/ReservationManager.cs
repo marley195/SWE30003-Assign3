@@ -11,11 +11,11 @@ namespace RelaxingKoala
             ReservationID = 1;
         }
 
-        public Reservation CreateReservation(int customerID, int tableID, DateTime reservationTime, int numberOfGuests)
+        public Reservation CreateReservation(int customerID, Table table, DateTime reservationTime, int numberOfGuests)
         {
-            Reservation reservation = new Reservation(ReservationID, customerID, tableID, reservationTime, numberOfGuests);
+            Reservation reservation = new Reservation( customerID, table.TableID, reservationTime, numberOfGuests);
+            table.TableStatus = Table.Status.Reserved;
             Reservations.Add(reservation);
-            ReservationID++;
             return reservation;
         }
 
@@ -27,25 +27,19 @@ namespace RelaxingKoala
             }
         }
 
-        public Reservation GetReservationByID(int reservationID)
+        public Reservation? GetReservationByID(int reservationID)
         {
             return Reservations.SingleOrDefault(res => res.ReservationId == reservationID);
         }
 
-        public Reservation GetReservationByCustomer(int customerID)
+        public Reservation? GetReservationByCustomer(int customerID)
         {
             return Reservations.SingleOrDefault(res => res.CustomerId == customerID);
         }
 
         public void RemoveReservation(int reservationID)
         {
-            Reservation reservation = GetReservationByID(reservationID);
-            if (reservation != null)
-            {
-                Reservations.Remove(reservation);
-            }
-
-
+            Reservations.RemoveAll(res => res.ReservationId == reservationID);
         }
     }
 }

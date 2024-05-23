@@ -14,10 +14,7 @@ namespace RelaxingKoala
             this.TableID = tableID;
             this.Capacity = capacity;
             this.TableStatus = Status.Available;
-
         }
-
-
 
         public Status TableStatus {get; set;}
         public int TableID { get; set; }

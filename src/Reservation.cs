@@ -3,9 +3,9 @@ namespace RelaxingKoala
     public class Reservation
     {
 
-        public Reservation(int ID, int customerID, int tableID, DateTime reservationTime, int numberOfGuests)
+        public Reservation(int customerID, int tableID, DateTime reservationTime, int numberOfGuests)
         {
-            this.ReservationId = ID;
+            this.ReservationId++;
             this.CustomerId = customerID;
             this.TableId = tableID;
             this.ReservationTime = reservationTime;
