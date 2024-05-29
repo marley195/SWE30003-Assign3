@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Security.Cryptography.X509Certificates;
 using CsvHelper;
 using CsvHelper.Configuration;
 
@@ -16,9 +15,13 @@ namespace RelaxingKoala
         // Add table to the dictionary of tables
         public void AddTable(int tableID, int capacity)
         {
-            Table table = new Table(tableID, capacity);
-            tables.Add(table);
+            tables.Add(new Table(tableID, capacity));
             writeTables();
+        }
+                // Remove table from the dictionary of tables   
+        public void RemoveTable(Table table)
+        {
+            tables.Remove(table);
         }
 
         public void writeTables()
@@ -62,58 +65,23 @@ namespace RelaxingKoala
                 csv.WriteRecords(tables);
             }
         }
-        // Remove table from the dictionary of tables   
-        public void RemoveTable(Table table)
-        {
-            tables.Remove(table);
-        }
-        //Return a table by its TableID
-        public Table GetTableByID(int tableID)
-        {
-            return tables[tableID];
-        }
-        public Table? GetTableByCapacity(int capacity)
-        {
-                return tables.First(table => table.Capacity == capacity);
-        }
-
-        // Display all Tables where TableID, Capacity and TableStatus are shown. - For Staff
-        public void DisplayTables()
-        {
-            foreach (var table in tables)
-            {
-                Console.WriteLine($"Table ID: {table.TableID}, Capacity: {table.Capacity}, Status: {table.TableStatus}");
-            }
-        }
         //Find the first available table with the capacity to accommodate the number of guests.
         public Table? FindAvailableTable(int capacity)
         {
             return tables.FirstOrDefault(table => table.TableStatus == Table.Status.Available && table.Capacity >= capacity);
         }
-        //Reserve Table based on TableID.
-        public void ReserveTable(Table table)
+        //Reserve table based on capacity
+        public Table? ReserveTable(int capacity)
         {
+            Table? table = FindAvailableTable(capacity);
             if(table != null)
             {
                 table.TableStatus = Table.Status.Reserved;
+                return table;
             }
-            else
-            {
-                Console.WriteLine("Table not found");
-            }
+            return null;
         }
-        //Change Table status to Occupied based on TableID.
-        public void OccupyTable(Table table)
-        {
-            if(table != null)
-            {
-                table.TableStatus = Table.Status.Occupied;
-            }
-            else
-            {
-                Console.WriteLine("Table not found");
-            }
-        }
+
         //Release Table based on TableID.
         public void ReleaseTable(Table table)
         {
@@ -126,6 +94,16 @@ namespace RelaxingKoala
                 Console.WriteLine("Table not found");
             }
         }
+
+        // Display all Tables where TableID, Capacity and TableStatus are shown. - For Staff
+        public void DisplayTables()
+        {
+            foreach (var table in tables)
+            {
+                Console.WriteLine($"Table ID: {table.TableID}, Capacity: {table.Capacity}, Status: {table.TableStatus}");
+            }
+        }
+
         //return a list of all available tables.
         public List<Table> ListAvailableTables()
         {

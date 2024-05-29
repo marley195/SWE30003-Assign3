@@ -33,24 +33,22 @@ namespace RelaxingKoala
                 Console.WriteLine("4. Find Available Table");
                 Console.WriteLine("5. Exit");
                 Console.Write("Select an option: ");
-                option = Console.ReadLine();
+                option = Console.ReadLine() ?? "";
                 switch(option)
                 {
                 case "1":
                 {
                     Console.Write("Enter number of guests: ");
-                    int guests = int.Parse(Console.ReadLine());
-                    Table table = tableManager.FindAvailableTable(guests);
+                    int guests = int.Parse(Console.ReadLine() ?? "");
+                    Table? table = tableManager.FindAvailableTable(guests);
                     if (table != null)
                     {   
                         Console.WriteLine("Table found\nEnter you name: ");
-                        string? name = Console.ReadLine();
+                        string name = Console.ReadLine() ?? "";
                         Console.WriteLine("Enter your contact number: ");
-                        string? contact = Console.ReadLine();
+                        string contact = Console.ReadLine() ?? "";
                         customer = new Customer(name, contact, "No requirements");
-                        reservationManager.CreateReservation(customer.CustomerId, tableManager, DateTime.Now.AddHours(2), guests);
-                        tableManager.ReserveTable(table);
-                        Console.WriteLine($"Table {table.TableID} reserved for {guests} guests");
+                        reservationManager.CreateReservation(customer, tableManager, DateTime.Now.AddHours(2), guests);
                     }
                     else
                     {
@@ -87,7 +85,7 @@ namespace RelaxingKoala
                 case "4":
                 {
                     Console.Write("Enter number of guests: ");
-                    int guests = int.Parse(Console.ReadLine());
+                    int guests = int.Parse(Console.ReadLine() ?? "");
                     Table? availableTable = tableManager.FindAvailableTable(guests);
                     if (availableTable != null)
                     {

@@ -7,15 +7,13 @@ namespace RelaxingKoala
         public ReservationManager()
         {
             Reservations = new List<Reservation>();
-
         }
 
-        public Reservation CreateReservation(int customerID, TableManger tableManger, DateTime reservationTime, int numberOfGuests)
+        public Reservation CreateReservation(Customer customer, TableManger tableManger, DateTime reservationTime, int numberOfGuests)
         {
-            Table table = tableManger.FindAvailableTable(numberOfGuests);
-            Reservation reservation = new Reservation( customerID, table.TableID, reservationTime, numberOfGuests);
-
+            Reservation reservation = new Reservation(customer, tableManger.ReserveTable(numberOfGuests), reservationTime, numberOfGuests);
             Reservations.Add(reservation);
+            Console.WriteLine("Reservation created, Details: " + reservation.Table.TableID + " Reservation Time: " + reservation.ReservationTime + " Number of Guests: " + reservation.NumberOfGuests + " Customer Name: " + reservation.Customer.Name + " Contact Number: " + reservation.Customer.ContactNumber);
             return reservation;
         }
 
@@ -25,14 +23,6 @@ namespace RelaxingKoala
             Reservations.RemoveAll(res => res.ReservationId == reservationID);
         }
 
-        public void DisplayReservations()
-        {
-            foreach (var res in Reservations)
-            {
-                Console.WriteLine($"Reservation ID: {res.ReservationId}, Customer ID: {res.CustomerId}, Table ID: {res.TableId}, Time: {res.ReservationTime}, Guests: {res.NumberOfGuests}");
-            }
-        }
-
         public Reservation? GetReservationByID(int reservationID)
         {
             return Reservations.SingleOrDefault(res => res.ReservationId == reservationID);
@@ -40,7 +30,7 @@ namespace RelaxingKoala
 
         public Reservation? GetReservationByCustomer(int customerID)
         {
-            return Reservations.SingleOrDefault(res => res.CustomerId == customerID);
+            return Reservations.SingleOrDefault(res => res.Customer.CustomerId == customerID);
         }
     }
 }

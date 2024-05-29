@@ -26,7 +26,7 @@ namespace RelaxingKoala
             Console.WriteLine($"Customer ID: {CustomerId}, Name: {Name}, Contact: {ContactNumber}");
             Console.WriteLine("Reservations:");
             Reservation? Reservations = reservationManager.GetReservationByCustomer(CustomerId);
-            Console.WriteLine($" Reservation ID: {Reservations.ReservationId}, Table ID: {Reservations.TableId}, Time: {Reservations.ReservationTime}, Guests: {Reservations.NumberOfGuests}");
+            Console.WriteLine($" Reservation ID: {Reservations.ReservationId}, Table ID: {Reservations.Table.TableID}, Time: {Reservations.ReservationTime}, Guests: {Reservations.NumberOfGuests}");
             Console.WriteLine("Orders:");
             foreach (var order in Orders)
             {
@@ -35,6 +35,18 @@ namespace RelaxingKoala
                 {
                     Console.WriteLine($"      Item: {item.Name}, Price: ${item.Price}");
                 }
+            }
+        }
+
+        public Customer? GetCustomerByID(int customerID)
+        {
+            if (CustomerId == customerID)
+            {
+                return this;
+            }
+            else
+            {
+                return null;
             }
         }
     }
