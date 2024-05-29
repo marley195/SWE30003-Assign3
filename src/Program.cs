@@ -15,10 +15,11 @@ namespace RelaxingKoala
             string option;
             // Create sample data
             var customer = new Customer("John Doe", "555-1234");
-            var order = new Order (1,1);
-            var menuItem = new MenuItem { MenuItemId = 1, Name = "Pizza", Price = 15.99M };
             //Temporary to Generate Tables for testing
-
+            for(int i = 0; i < 10; i++)
+            {
+                tableManager.CreateTable(i, RandomNumberGenerator.GetInt32(2, 10));
+            }
             tableManager.readTables();
 
             //Loop for Reservation + table system.
@@ -40,7 +41,7 @@ namespace RelaxingKoala
                 {
                     Console.Write("Enter number of guests: ");
                     int guests = int.Parse(Console.ReadLine() ?? "");
-                    Table? table = tableManager.FindAvailableTable(guests);
+                    Table? table = tableManager.FindAvailableTable(guests, DateTime.Today);
                     if (table != null)
                     {   
                         Console.WriteLine("Table found\nEnter you name: ");
@@ -86,7 +87,7 @@ namespace RelaxingKoala
                 {
                     Console.Write("Enter number of guests: ");
                     int guests = int.Parse(Console.ReadLine() ?? "");
-                    Table? availableTable = tableManager.FindAvailableTable(guests);
+                    Table? availableTable = tableManager.FindAvailableTable(guests, DateTime.Today);
                     if (availableTable != null)
                     {
                         Console.WriteLine($"Table ID: {availableTable.TableID}, Capacity: {availableTable.Capacity}");

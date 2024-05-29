@@ -8,12 +8,11 @@ namespace RelaxingKoala
     {
         private List<Table> tables;
 
-        public TableManger()
-        {
+        public TableManger() {
             tables = new List<Table>();
         }
         // Add table to the dictionary of tables
-        public void AddTable(int tableID, int capacity)
+        public void CreateTable(int tableID, int capacity)
         {
             tables.Add(new Table(tableID, capacity));
             writeTables();
@@ -29,7 +28,14 @@ namespace RelaxingKoala
             using (var writer = new StreamWriter("tables.csv"))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
-                csv.WriteRecords(tables);
+                csv.Context.RegisterClassMap<TableMap>();
+                csv.WriteHeader<Table>();
+                csv.NextRecord();
+                foreach(var table in tables)
+                {
+                    csv.WriteRecord(table);
+                    csv.NextRecord();
+                }
             }
         }
 
@@ -66,14 +72,15 @@ namespace RelaxingKoala
             }
         }
         //Find the first available table with the capacity to accommodate the number of guests.
-        public Table? FindAvailableTable(int capacity)
+        public Table? FindAvailableTable(int capacity, DateTime dateTime)
         {
-            return tables.FirstOrDefault(table => table.TableStatus == Table.Status.Available && table.Capacity >= capacity);
+            return tables.FirstOrDefault(table => table.TableStatus == Table.Status.Available && table.Capacity >= capacity && table.TimeSlots.Any(TimeSlot => TimeSlot.StartTime <= dateTime && dateTime <= TimeSlot.EndTime && TimeSlot.BookingStatus == Table.Status.Available));
         }
+
         //Reserve table based on capacity
-        public Table? ReserveTable(int capacity)
+        public Table? ReserveTable(int capacity, DateTime dateTime)
         {
-            Table? table = FindAvailableTable(capacity);
+            Table? table = FindAvailableTable(capacity, dateTime);
             if(table != null)
             {
                 table.TableStatus = Table.Status.Reserved;
@@ -101,6 +108,10 @@ namespace RelaxingKoala
             foreach (var table in tables)
             {
                 Console.WriteLine($"Table ID: {table.TableID}, Capacity: {table.Capacity}, Status: {table.TableStatus}");
+                foreach (var TimeSlot in table.TimeSlots)
+                {
+                    Console.WriteLine($"   Time: {TimeSlot.StartTime}, Status: {TimeSlot.BookingStatus}");
+                }
             }
         }
 
@@ -109,6 +120,10 @@ namespace RelaxingKoala
         {
             return tables.Where(table => table.TableStatus == Table.Status.Available).ToList();
         } 
-        
+        //Return available tables at Certain time 
+        public List<Table> ListAvailableTables(DateTime dateTime)
+        {
+            return tables.Where(table => table.TableStatus == Table.Status.Available && table.TimeSlots.Any(TimeSlot => TimeSlot.StartTime == dateTime)).ToList();
+        }
     }
 }

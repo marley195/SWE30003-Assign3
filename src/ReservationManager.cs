@@ -11,7 +11,7 @@ namespace RelaxingKoala
 
         public Reservation CreateReservation(Customer customer, TableManger tableManger, DateTime reservationTime, int numberOfGuests)
         {
-            Reservation reservation = new Reservation(customer, tableManger.ReserveTable(numberOfGuests), reservationTime, numberOfGuests);
+            Reservation reservation = new Reservation(customer, tableManger.ReserveTable(numberOfGuests, reservationTime), reservationTime, numberOfGuests);
             Reservations.Add(reservation);
             Console.WriteLine("Reservation created, Details: " + reservation.Table.TableID + " Reservation Time: " + reservation.ReservationTime + " Number of Guests: " + reservation.NumberOfGuests + " Customer Name: " + reservation.Customer.Name + " Contact Number: " + reservation.Customer.ContactNumber);
             return reservation;
