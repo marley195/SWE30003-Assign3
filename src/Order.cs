@@ -42,5 +42,17 @@ namespace RelaxingKoala
         {
             Items.Add(item);
         }
+
+        public void Pay(amount)
+        {
+            AmountOwed -= amount;
+            CreateInvoice(AmountOwed);
+        }
+
+        public void CreateInvoice(amountOwed)
+        {
+            Invoice invoice = new(Invoice(invoiceID, OrderId, amountOwed, DateTime.Today));
+            invoice.DisplayInvoiceDetails();
+        }
     }
 }
