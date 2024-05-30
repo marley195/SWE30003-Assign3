@@ -19,6 +19,17 @@ namespace RelaxingKoala
                 table.TableStatus=Table.Status.Reserved;
             }
         }
+        public void OccupyTable(Customer customer, TableManager tableManager, DateTime dateTime, int numberOfGuests)
+        {
+            Table? table = tableManager.FindAvailableTable(numberOfGuests, dateTime);
+            if (table != null)
+            {
+                Reservation reservation = new Reservation(customer, table, dateTime, numberOfGuests);
+                Reservations.Add(reservation);
+                table.TableStatus=Table.Status.Occupied;
+            }
+
+        }
 
 
         public void RemoveReservation(int reservationID)

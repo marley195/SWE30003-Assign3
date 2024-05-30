@@ -7,10 +7,11 @@ namespace RelaxingKoala
     {
         private List<IObserver> observers;
         private int AmountOwed = 0;
+        private static int nextorderId = 0;
         public enum State { OrderPlaced, OrderProcessed, OrderCompleted, OrderCancelled };
-        public Order(int orderId, int customerId)
+        public Order( int customerId)
         {
-            OrderId = orderId;
+            OrderId = nextorderId++;
             CustomerId = customerId;
             observers = new List<IObserver>();
             OrderState = State.OrderPlaced;
@@ -38,7 +39,7 @@ namespace RelaxingKoala
         public int OrderId { get; set; }
         public int CustomerId { get; set; }
         public List<MenuItem> Items { get; set; } = new List<MenuItem>();
-        public decimal TotalAmount => Items.Sum(item => item.Price);
+        public int TotalAmount => Items.Sum(item => item.Price);
 
         public void AddItem(MenuItem item)
         {

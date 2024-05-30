@@ -12,11 +12,16 @@ namespace RelaxingKoala
             //Object creation
             ReservationManager reservationManager = new ReservationManager();
             TableManager tableManager = new TableManager();
+            Menu menu = new Menu();
+
             bool exit = false;
             string option;
             List<Customer> Customers = new List<Customer>();
             // Create sample data
-             ;
+            var item1 = new MenuItem(10, "Pasta");
+            var item2 = new MenuItem(15, "Pizza");
+            menu.AddMenuItem(item1);
+            menu.AddMenuItem(item2);
             Customers.Add(new Customer("John Doe", "555-1234"));
             //Temporary to Generate Tables for testing
             for (int i = 0; i < 10; i++)
@@ -33,11 +38,13 @@ namespace RelaxingKoala
                 Console.WriteLine("Please select an option:");
                 Console.WriteLine("1. Show Customer Details");
                 Console.WriteLine("2. Reserve Table");
-                Console.WriteLine("3. Display Tables");
-                Console.WriteLine("4. List Available Tables");
-                Console.WriteLine("5. Find Available Table");
-                Console.WriteLine("6. Pay For An Order");
-                Console.WriteLine("7. Exit");
+                Console.WriteLine("3. Place an order");
+                Console.WriteLine("4. Display Tables");
+                Console.WriteLine("5. List Available Tables");
+                Console.WriteLine("6. Find Available Table");
+                Console.WriteLine("7. Pay For An Order");
+                Console.WriteLine("8. Display Menu");
+                Console.WriteLine("9. Exit");
                 Console.Write("Select an option: ");
                 option = Console.ReadLine() ?? "";
                 switch (option)
@@ -78,11 +85,66 @@ namespace RelaxingKoala
                             break;
                         }
                     case "3":
+                        {
+                            Console.Write("Enter number of guests: ");
+                            int guest = int.Parse(Console.ReadLine() ?? "");
+                            Table? _table = tableManager.FindAvailableTable(guest, DateTime.Today);
+                            if (_table != null)
+                            {
+                                Console.WriteLine("Table found\nEnter you name: ");
+                                string name = Console.ReadLine() ?? "";
+                                Console.WriteLine("Enter your contact number: ");
+                                string contact = Console.ReadLine() ?? "";
+                                Customers.Add(new Customer(name, contact, "No requirements"));
+                                reservationManager.OccupyTable(Customers[Customers.Count-1], tableManager, DateTime.Now, guest);
+
+                                //take order
+                                Order order = new Order(Customers[Customers.Count-1].CustomerId);
+                                bool ordering = true;
+                                while (ordering)
+                                {
+                                    Console.Clear();
+                                    menu.DisplayMenu();
+                                    Console.Write("Enter the Menu Item ID to add to order, or 'done' to finish: ");
+                                    string menuItemInput = Console.ReadLine() ?? "";
+
+                                    if (menuItemInput.ToLower() == "done")
+                                    {
+                                        Customers[Customers.Count-1].AddOrder(order);
+                                        ordering = false;
+                                    }
+                                    else if (int.TryParse(menuItemInput, out int menuItemId))
+                                    {
+                                        MenuItem? menuItem = menu.MenuItems.FirstOrDefault(item => item.MenuItemId == menuItemId);
+                                        if (menuItem != null)
+                                        {
+                                            order.AddItem(menuItem);
+                                            Console.WriteLine($"{menuItem.Name} added to order.");
+                                            Console.Write("Press any key to continue...");
+                                            Console.ReadKey();
+
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Invalid Menu Item ID.");
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("No tables available");
+                            }
+                            Console.Write("Press any key to continue...");
+                            Console.ReadKey();
+                            break;
+                        }
+                    case "4":
                         tableManager.DisplayTables();
                         Console.Write("Press any key to continue...");
                         Console.ReadKey();
                         break;
-                    case "4":
+                    case "5":
                         {
                             var availableTables = tableManager.ListAvailableTables();
                             if (availableTables.Count > 0)
@@ -101,7 +163,7 @@ namespace RelaxingKoala
                             Console.ReadKey();
                             break;
                         }
-                    case "5":
+                    case "6":
                         {
                             Console.Write("Enter number of guests: ");
                             int guests = int.Parse(Console.ReadLine() ?? "");
@@ -118,14 +180,22 @@ namespace RelaxingKoala
                             Console.ReadKey();
                             break;
                         }
-                    case "6":
+                    case "7":
                         {
                             //customer.Pay();
                             Console.Write("Press any key to continue...");
                             Console.ReadKey();
                             break;
                         }
-                    case "7":
+                    case "8":
+                        {
+                            Console.WriteLine("checkcheck");
+                            menu.DisplayMenu();
+                            Console.Write("Press any key to continue...");
+                            Console.ReadKey();
+                            break;
+                        }
+                    case "9":
                         {
                             exit = true;
                             break;

@@ -4,11 +4,17 @@ namespace RelaxingKoala
 {
     public class MenuItem
     {
-        //Create temporary file
-        string path = Path.GetTempFileName();
-        
-        public int MenuItemId { get; set; }
+        private static int _lastMenuItemId = 0;
+
+        public MenuItem(int price, string name)
+        {
+            MenuItemId = ++_lastMenuItemId;
+            Price = price;
+            Name = name;
+        }
+
+        public int MenuItemId { get; private set; }
         public int Price { get; set; }
-        public  string Name { get; set; }
+        public string Name { get; set; }
     }
 }

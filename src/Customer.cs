@@ -19,7 +19,11 @@ namespace RelaxingKoala
         }
 
         // Method to add an order for the customer
-        public void AddOrder(Order order) => Orders.Add(order);
+        public void AddOrder(Order order) 
+        {
+            Orders.Add(order);
+            order.OrderState=Order.State.OrderPlaced;
+        } 
 
         // Method to display customer details along with reservations and orders
         public void DisplayCustomerDetails(ReservationManager reservationManager)
