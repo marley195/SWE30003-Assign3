@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace RelaxingKoala
 {
     public class MenuItem
@@ -6,7 +8,7 @@ namespace RelaxingKoala
         string path = Path.GetTempFileName();
         
         public int MenuItemId { get; set; }
-        public decimal Price { get; set; }
-        public required string Name { get; set; }
+        public int Price { get; set; }
+        public  string Name { get; set; }
     }
 }

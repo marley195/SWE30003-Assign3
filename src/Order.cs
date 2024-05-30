@@ -1,18 +1,19 @@
 using System.Collections.Generic;
+using System.Security.Cryptography;
 
 namespace RelaxingKoala
 {
-       public class Order : ISubject
+    public class Order : ISubject
     {
         private List<IObserver> observers;
-        public enum State {OrderPlaced, OrderProcessed, OrderCompleted, OrderCancelled};
+        private int AmountOwed = 0;
+        public enum State { OrderPlaced, OrderProcessed, OrderCompleted, OrderCancelled };
         public Order(int orderId, int customerId)
         {
             OrderId = orderId;
             CustomerId = customerId;
             observers = new List<IObserver>();
             OrderState = State.OrderPlaced;
-            AmountOwed = 0;
         }
 
         public void AttachObserver(IObserver observer)
@@ -32,13 +33,12 @@ namespace RelaxingKoala
         }
 
 
-        public State OrderState {get; set;}
+        public State OrderState { get; set; }
 
         public int OrderId { get; set; }
         public int CustomerId { get; set; }
         public List<MenuItem> Items { get; set; } = new List<MenuItem>();
         public decimal TotalAmount => Items.Sum(item => item.Price);
-        public decimal AmountOwed { get; set; }
 
         public void AddItem(MenuItem item)
         {
@@ -46,22 +46,27 @@ namespace RelaxingKoala
             AmountOwed += item.Price;
         }
 
-        public void Pay(amount)
+        public void Pay(int amount)
         {
             AmountOwed -= amount;
-            if(AmountOwed < 0)
+            if (AmountOwed < 0)
             {
                 decimal extraAmount = AmountOwed * -1;
                 AmountOwed = 0;
                 Console.WriteLine($"The price has been overpayed. ${extraAmount} has been returned to you.");
             }
-            CreateInvoice(AmountOwed);
+            CreateInvoice();
         }
 
-        public void CreateInvoice(amountOwed)
+        public void CreateInvoice()
         {
-            Invoice invoice = new(Invoice(invoiceID, OrderId, amountOwed, DateTime.Today));
+            int invoiceID = RandomNumberGenerator.GetInt32(2, 10);
+            Invoice invoice = new Invoice(invoiceID, OrderId, AmountOwed);
             invoice.DisplayInvoiceDetails();
+        }
+        public int getAmountOwed
+        {
+            get { return AmountOwed; }
         }
     }
 }

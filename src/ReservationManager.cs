@@ -9,12 +9,15 @@ namespace RelaxingKoala
             Reservations = new List<Reservation>();
         }
 
-        public Reservation CreateReservation(Customer customer, TableManger tableManger, DateTime reservationTime, int numberOfGuests)
+        public void CreateReservation(Customer customer, TableManager tableManager, DateTime dateTime, int numberOfGuests)
         {
-            Reservation reservation = new Reservation(customer, tableManger.ReserveTable(numberOfGuests, reservationTime), reservationTime, numberOfGuests);
-            Reservations.Add(reservation);
-            Console.WriteLine("Reservation created, Details: " + reservation.Table.TableID + " Reservation Time: " + reservation.ReservationTime + " Number of Guests: " + reservation.NumberOfGuests + " Customer Name: " + reservation.Customer.Name + " Contact Number: " + reservation.Customer.ContactNumber);
-            return reservation;
+            Table? table = tableManager.FindAvailableTable(numberOfGuests, dateTime);
+            if (table != null)
+            {
+                Reservation reservation = new Reservation(customer, table, dateTime, numberOfGuests);
+                Reservations.Add(reservation);
+                table.TableStatus=Table.Status.Reserved;
+            }
         }
 
 

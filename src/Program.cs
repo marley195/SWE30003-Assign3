@@ -6,21 +6,24 @@ namespace RelaxingKoala
 {
     class Program
     {
+
         public static void Main()
         {
             //Object creation
             ReservationManager reservationManager = new ReservationManager();
-            TableManger tableManager = new TableManger();
+            TableManager tableManager = new TableManager();
             bool exit = false;
             string option;
+            List<Customer> Customers = new List<Customer>();
             // Create sample data
-            var customer = new Customer("John Doe", "555-1234");
+             ;
+            Customers.Add(new Customer("John Doe", "555-1234"));
             //Temporary to Generate Tables for testing
-            for(int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 tableManager.CreateTable(i, RandomNumberGenerator.GetInt32(2, 10));
             }
-            tableManager.readTables();
+            //tableManager.readTables();
 
             //Loop for Reservation + table system.
             while (!exit)
@@ -37,101 +40,107 @@ namespace RelaxingKoala
                 Console.WriteLine("7. Exit");
                 Console.Write("Select an option: ");
                 option = Console.ReadLine() ?? "";
-                switch(option)
+                switch (option)
                 {
-                case "1":
-                    {
-                        customer.DisplayCustomerDetails(reservationManager);
-                        Console.Write("Press any key to continue...");
-                        Console.ReadKey();
-                        break;
-                    }
-                case "2":
-                {
-                    Console.Write("Enter number of guests: ");
-                    int guests = int.Parse(Console.ReadLine() ?? "");
-                    Table? table = tableManager.FindAvailableTable(guests, DateTime.Today);
-                    if (table != null)
-                    {   
-                        Console.WriteLine("Table found\nEnter you name: ");
-                        string name = Console.ReadLine() ?? "";
-                        Console.WriteLine("Enter your contact number: ");
-                        string contact = Console.ReadLine() ?? "";
-                        customer = new Customer(name, contact, "No requirements");
-                        reservationManager.CreateReservation(customer, tableManager, DateTime.Now.AddHours(2), guests);
-                    }
-                    else
-                    {
-                        Console.WriteLine("No tables available");
-                    }
-                    Console.Write("Press any key to continue...");
-                    Console.ReadKey();
-                    break;
-                }
-                case "3":
-                    tableManager.DisplayTables();
-                    Console.Write("Press any key to continue...");
-                    Console.ReadKey();
-                    break;
-                case "4":
-                {
-                    var availableTables = tableManager.ListAvailableTables();
-                    if (availableTables.Count > 0)
-                    {
-                        Console.WriteLine("Available Tables:");
-                        foreach (var availableTable in availableTables)
+                    case "1":
                         {
-                            Console.WriteLine($"Table ID: {availableTable.TableID}, Capacity: {availableTable.Capacity}");
+                            foreach(Customer customer1 in Customers)
+                            {
+                                {
+                                    customer1.DisplayCustomerDetails(reservationManager);
+
+                                }
+                            }
+                            Console.WriteLine("Press any key to continue...");
+                            Console.ReadKey();
+                            break;
                         }
-                    }
-                    else
-                    {
-                        Console.WriteLine("No tables available");
-                    }
-                    Console.Write("Press any key to continue...");
-                    Console.ReadKey();
-                    break;
-                }
-                case "5":
-                {
-                    Console.Write("Enter number of guests: ");
-                    int guests = int.Parse(Console.ReadLine() ?? "");
-                    Table? availableTable = tableManager.FindAvailableTable(guests, DateTime.Today);
-                    if (availableTable != null)
-                    {
-                        Console.WriteLine($"Table ID: {availableTable.TableID}, Capacity: {availableTable.Capacity}");
-                    }
-                    else
-                    {
-                        Console.WriteLine("No tables available");
-                    }
-                    Console.Write("Press any key to continue...");
-                    Console.ReadKey();
-                    break;
-                }
-                case "6":
-                    {
-                        customer.Pay();
+                    case "2":
+                        {
+                            Console.Write("Enter number of guests: ");
+                            int guests = int.Parse(Console.ReadLine() ?? "");
+                            Table? table = tableManager.FindAvailableTable(guests, DateTime.Today);
+                            if (table != null)
+                            {
+                                Console.WriteLine("Table found\nEnter you name: ");
+                                string name = Console.ReadLine() ?? "";
+                                Console.WriteLine("Enter your contact number: ");
+                                string contact = Console.ReadLine() ?? "";
+                                Customers.Add(new Customer(name, contact, "No requirements"));
+                                reservationManager.CreateReservation(Customers[Customers.Count-1], tableManager, DateTime.Now.AddHours(2), guests);
+                            }
+                            else
+                            {
+                                Console.WriteLine("No tables available");
+                            }
+                            Console.Write("Press any key to continue...");
+                            Console.ReadKey();
+                            break;
+                        }
+                    case "3":
+                        tableManager.DisplayTables();
                         Console.Write("Press any key to continue...");
                         Console.ReadKey();
                         break;
-                    }
-                case "7":
-                {
-                    exit = true;
-                    break;
+                    case "4":
+                        {
+                            var availableTables = tableManager.ListAvailableTables();
+                            if (availableTables.Count > 0)
+                            {
+                                Console.WriteLine("Available Tables:");
+                                foreach (var availableTable in availableTables)
+                                {
+                                    Console.WriteLine($"Table ID: {availableTable.TableID}, Capacity: {availableTable.Capacity}");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("No tables available");
+                            }
+                            Console.Write("Press any key to continue...");
+                            Console.ReadKey();
+                            break;
+                        }
+                    case "5":
+                        {
+                            Console.Write("Enter number of guests: ");
+                            int guests = int.Parse(Console.ReadLine() ?? "");
+                            Table? availableTable = tableManager.FindAvailableTable(guests, DateTime.Today);
+                            if (availableTable != null)
+                            {
+                                Console.WriteLine($"Table ID: {availableTable.TableID}, Capacity: {availableTable.Capacity}");
+                            }
+                            else
+                            {
+                                Console.WriteLine("No tables available");
+                            }
+                            Console.Write("Press any key to continue...");
+                            Console.ReadKey();
+                            break;
+                        }
+                    case "6":
+                        {
+                            //customer.Pay();
+                            Console.Write("Press any key to continue...");
+                            Console.ReadKey();
+                            break;
+                        }
+                    case "7":
+                        {
+                            exit = true;
+                            break;
+                        }
+                    default:
+                        {
+                            Console.WriteLine("Invalid option");
+                            Console.Write("Press any key to continue...");
+                            Console.ReadKey();
+                            break;
+                        }
                 }
-                default:
-                {
-                    Console.WriteLine("Invalid option");
-                    Console.Write("Press any key to continue...");
-                    Console.ReadKey();
-                    break;
-                }
-            }   
             }
         }
-    } 
+    }
 }
 
 

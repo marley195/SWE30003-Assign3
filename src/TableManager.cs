@@ -4,44 +4,31 @@ using CsvHelper.Configuration;
 
 namespace RelaxingKoala
 {
-    public class TableManger
+    public class TableManager
     {
         private List<Table> tables;
 
-        public TableManger() {
+        public TableManager()
+        {
             tables = new List<Table>();
         }
         // Add table to the dictionary of tables
         public void CreateTable(int tableID, int capacity)
         {
             tables.Add(new Table(tableID, capacity));
-            writeTables();
+            //writeTables();
         }
-                // Remove table from the dictionary of tables   
+        // Remove table from the dictionary of tables   
         public void RemoveTable(Table table)
         {
             tables.Remove(table);
         }
 
-        public void writeTables()
-        {
-            using (var writer = new StreamWriter("tables.csv"))
-            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
-            {
-                csv.Context.RegisterClassMap<TableMap>();
-                csv.WriteHeader<Table>();
-                csv.NextRecord();
-                foreach(var table in tables)
-                {
-                    csv.WriteRecord(table);
-                    csv.NextRecord();
-                }
-            }
-        }
+ 
 
         public void readTables()
         {
-            if(!File.Exists("tables.csv"))
+            if (!File.Exists("tables.csv"))
             {
                 return;
             }
@@ -58,30 +45,22 @@ namespace RelaxingKoala
             }
         }
 
-        public void UpdateTableFile(Table table)
-        {
-            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                HasHeaderRecord = false,
-            };
-            using (var stream = File.Open("tables.csv", FileMode.Append))
-            using (var writer = new StreamWriter(stream))
-            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
-            {
-                csv.WriteRecords(tables);
-            }
-        }
+        //public void UpdateTableFile(Table table)
+        //{
+        //    writeTables();
+
+        //}
         //Find the first available table with the capacity to accommodate the number of guests.
         public Table? FindAvailableTable(int capacity, DateTime dateTime)
         {
-            return tables.FirstOrDefault(table => table.TableStatus == Table.Status.Available && table.Capacity >= capacity && table.TimeSlots.Any(TimeSlot => TimeSlot.StartTime <= dateTime && dateTime <= TimeSlot.EndTime && TimeSlot.BookingStatus == Table.Status.Available));
+            return tables.FirstOrDefault(table => table.TableStatus == Table.Status.Available && table.Capacity >= capacity);
         }
 
         //Reserve table based on capacity
         public Table? ReserveTable(int capacity, DateTime dateTime)
         {
             Table? table = FindAvailableTable(capacity, dateTime);
-            if(table != null)
+            if (table != null)
             {
                 table.TableStatus = Table.Status.Reserved;
                 return table;
@@ -92,7 +71,7 @@ namespace RelaxingKoala
         //Release Table based on TableID.
         public void ReleaseTable(Table table)
         {
-            if(table != null)
+            if (table != null)
             {
                 table.TableStatus = Table.Status.Available;
             }
@@ -108,10 +87,6 @@ namespace RelaxingKoala
             foreach (var table in tables)
             {
                 Console.WriteLine($"Table ID: {table.TableID}, Capacity: {table.Capacity}, Status: {table.TableStatus}");
-                foreach (var TimeSlot in table.TimeSlots)
-                {
-                    Console.WriteLine($"   Time: {TimeSlot.StartTime}, Status: {TimeSlot.BookingStatus}");
-                }
             }
         }
 
@@ -119,11 +94,11 @@ namespace RelaxingKoala
         public List<Table> ListAvailableTables()
         {
             return tables.Where(table => table.TableStatus == Table.Status.Available).ToList();
-        } 
+        }
         //Return available tables at Certain time 
         public List<Table> ListAvailableTables(DateTime dateTime)
         {
-            return tables.Where(table => table.TableStatus == Table.Status.Available && table.TimeSlots.Any(TimeSlot => TimeSlot.StartTime == dateTime)).ToList();
+            return tables.Where(table => table.TableStatus == Table.Status.Available).ToList();
         }
     }
 }

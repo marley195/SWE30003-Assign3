@@ -1,7 +1,8 @@
 namespace RelaxingKoala
 {
-    public class Customer 
+    public class Customer
     {
+        private static int nextCustomerId = 1;
         public int CustomerId { get; set; }
         public string Name { get; set; }
         public string ContactNumber { get; set; }
@@ -9,9 +10,9 @@ namespace RelaxingKoala
         public List<Order> Orders { get; set; } = new List<Order>();
 
         // Constructor to initialize a new customer with essential details
-        public Customer( string name, string contactNumber, string requirements = "")
+        public Customer(string name, string contactNumber, string requirements = "")
         {
-            CustomerId++;
+            CustomerId = nextCustomerId++;
             Name = name;
             ContactNumber = contactNumber;
             Requirements = requirements;
@@ -24,18 +25,28 @@ namespace RelaxingKoala
         public void DisplayCustomerDetails(ReservationManager reservationManager)
         {
             Console.WriteLine($"Customer ID: {CustomerId}, Name: {Name}, Contact: {ContactNumber}");
-            Console.WriteLine("Reservations:");
-            Reservation? Reservations = reservationManager.GetReservationByCustomer(CustomerId);
-            Console.WriteLine($" Reservation ID: {Reservations.ReservationId}, Table ID: {Reservations.Table.TableID}, Time: {Reservations.ReservationTime}, Guests: {Reservations.NumberOfGuests}");
-            Console.WriteLine("Orders:");
-            foreach (var order in Orders)
+            Console.Write("Reservations:");
+            Reservation? Reservations = reservationManager.GetReservationByCustomer(this.CustomerId);
+            if(Reservations != null)
             {
-                Console.WriteLine($"   Order ID: {order.OrderId}, Total: ${order.TotalAmount}, Amount Owed: ${order.AmountOwed}");
-                foreach (var item in order.Items)
-                {
-                    Console.WriteLine($"      Item: {item.Name}, Price: ${item.Price}");
-                }
+                Console.WriteLine($" Reservation ID: {Reservations.ReservationId}, Table ID: {Reservations.Table.TableID}, Time: {Reservations.ReservationTime}, Guests: {Reservations.NumberOfGuests}");
+
             }
+            else { Console.WriteLine(" no reservations"); }
+            if (Orders.Count>0)
+            {
+                Console.WriteLine("Orders:");
+                foreach (var order in Orders)
+                {
+                    Console.WriteLine($"   Order ID: {order.OrderId}, Total: ${order.TotalAmount}, Amount Owed: ${order.getAmountOwed}");
+                    foreach (var item in order.Items)
+                    {
+                        Console.WriteLine($"      Item: {item.Name}, Price: ${item.Price}");
+                    }
+                }
+
+            }
+           
         }
 
         public void Pay()
@@ -45,7 +56,7 @@ namespace RelaxingKoala
             decimal amount = 0;
             DisplayOrders();
             Console.WriteLine("Please select the order number you wish to pay for:");
-            if(int.TryParse(Console.ReadLine() ?? "0", out int result))
+            if (int.TryParse(Console.ReadLine() ?? "0", out int result))
             {
                 selectedOrder = result;
 
@@ -64,10 +75,10 @@ namespace RelaxingKoala
                 else
                 {
                     Console.WriteLine("Please input amount being paid:");
-                    if(decimal.TryParse(Console.ReadLine() ?? "0.0", out decimal result2))
+                    if (decimal.TryParse(Console.ReadLine() ?? "0.0", out decimal result2))
                     {
                         amount = result2;
-                        requiredOrder.Pay(amount);
+                        requiredOrder.Pay((int)amount);
                     }
                     else
                     {
@@ -85,7 +96,7 @@ namespace RelaxingKoala
         {
             foreach (Order order in Orders)
             {
-                Console.WriteLine($"   Order ID: {order.OrderId}, Total: ${order.TotalAmount}, Amount Owed: ${order.AmountOwed}");
+                Console.WriteLine($"   Order ID: {order.OrderId}, Total: ${order.TotalAmount}, Amount Owed: ${order.getAmountOwed}");
                 foreach (var item in order.Items)
                 {
                     Console.WriteLine($"      Item: {item.Name}, Price: ${item.Price}");
