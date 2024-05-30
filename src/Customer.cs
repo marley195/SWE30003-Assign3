@@ -41,36 +41,25 @@ namespace RelaxingKoala
         public void Pay()
         {
             Console.WriteLine("Please select the order number you wish to pay for:");
-            displayOrders();
-            selectedOrder = Console.ReadLine();
-
-            foreach(Order order in Orders)
+            DisplayOrders();
+            int selectedOrder = int.Parse(Console.ReadLine() ?? "0");
+        
+            Order? requiredOrder = Orders.SingleOrDefault(o => o.OrderId == selectedOrder);
+            if (requiredOrder == null)
             {
-                if(order.OrderId = selectedOrder)
-                {
-                    requiredOrder = order;
-                }
-                else
-                {
-                    requiredOrder = "";
-                }
-
-                if(requiredOrder = "")
-                {
-                    Console.WriteLine("That order could not be found");
-                }
-                else
-                {
-                    Console.WriteLine("Please input amount being payed");
-                    amount = Console.ReadLine();
-                }
+                Console.WriteLine("That order could not be found");
+            }
+            else
+            {
+                Console.WriteLine("Please input amount being paid:");
+                decimal amount = decimal.Parse(Console.ReadLine() ?? "0");
                 requiredOrder.Pay(amount);
             }
         }
 
         public void DisplayOrders()
         {
-            foreach(Order order in Orders)
+            foreach (Order order in Orders)
             {
                 Console.WriteLine($"   Order ID: {order.OrderId}, Total: ${order.TotalAmount}");
                 foreach (var item in order.Items)
