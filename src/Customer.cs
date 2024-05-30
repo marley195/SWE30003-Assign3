@@ -40,20 +40,44 @@ namespace RelaxingKoala
 
         public void Pay()
         {
-            Console.WriteLine("Please select the order number you wish to pay for:");
+            int selectedOrder = 0;
+            Order requiredOrder = null;
+            decimal amount = 0;
             DisplayOrders();
-            int selectedOrder = int.Parse(Console.ReadLine() ?? "0");
-        
-            Order? requiredOrder = Orders.SingleOrDefault(o => o.OrderId == selectedOrder);
-            if (requiredOrder == null)
+            Console.WriteLine("Please select the order number you wish to pay for:");
+            if(int.TryParse(Console.ReadLine() ?? "0", out int result))
             {
-                Console.WriteLine("That order could not be found");
+                selectedOrder = result;
+
+                foreach (Order order in Orders)
+                {
+                    if (order.OrderId == selectedOrder)
+                    {
+                        requiredOrder = order;
+                    }
+                }
+
+                if (requiredOrder == null)
+                {
+                    Console.WriteLine("That order could not be found");
+                }
+                else
+                {
+                    Console.WriteLine("Please input amount being paid:");
+                    if(decimal.TryParse(Console.ReadLine() ?? "0.0", out decimal result2))
+                    {
+                        amount = result2;
+                        requiredOrder.Pay(amount);
+                    }
+                    else
+                    {
+                        Console.WriteLine("A valid amount was not inputted. Please input an amount in the format dollars.cents with no special characters");
+                    }
+                }
             }
             else
             {
-                Console.WriteLine("Please input amount being paid:");
-                decimal amount = decimal.Parse(Console.ReadLine() ?? "0");
-                requiredOrder.Pay(amount);
+                Console.WriteLine("A valid order ID was not submitted.");
             }
         }
 
