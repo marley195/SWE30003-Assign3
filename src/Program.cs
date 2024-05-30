@@ -32,7 +32,8 @@ namespace RelaxingKoala
                 Console.WriteLine("2. Display Tables");
                 Console.WriteLine("3. List Available Tables");
                 Console.WriteLine("4. Find Available Table");
-                Console.WriteLine("5. Exit");
+                Console.WriteLine("5. Pay For An Order");
+                Console.WriteLine("6. Exit");
                 Console.Write("Select an option: ");
                 option = Console.ReadLine() ?? "";
                 switch(option)
@@ -101,6 +102,13 @@ namespace RelaxingKoala
                     break;
                 }
                 case "5":
+                    {
+                        customer.Pay();
+                        Console.Write("Press any key to continue...");
+                        Console.ReadKey();
+                        break;
+                    }
+                case "6":
                 {
                     exit = true;
                     break;
