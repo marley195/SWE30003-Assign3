@@ -28,17 +28,25 @@ namespace RelaxingKoala
                 Console.Clear();
                 Console.WriteLine("Welcome to Relaxing Koala!");
                 Console.WriteLine("Please select an option:");
-                Console.WriteLine("1. Reserve Table");
-                Console.WriteLine("2. Display Tables");
-                Console.WriteLine("3. List Available Tables");
-                Console.WriteLine("4. Find Available Table");
-                Console.WriteLine("5. Pay For An Order");
-                Console.WriteLine("6. Exit");
+                Console.WriteLine("1. Show Customer Details");
+                Console.WriteLine("2. Reserve Table");
+                Console.WriteLine("3. Display Tables");
+                Console.WriteLine("4. List Available Tables");
+                Console.WriteLine("5. Find Available Table");
+                Console.WriteLine("6. Pay For An Order");
+                Console.WriteLine("7. Exit");
                 Console.Write("Select an option: ");
                 option = Console.ReadLine() ?? "";
                 switch(option)
                 {
                 case "1":
+                    {
+                        customer.DisplayCustomerDetails(reservationManager);
+                        Console.Write("Press any key to continue...");
+                        Console.ReadKey();
+                        break;
+                    }
+                case "2":
                 {
                     Console.Write("Enter number of guests: ");
                     int guests = int.Parse(Console.ReadLine() ?? "");
@@ -60,12 +68,12 @@ namespace RelaxingKoala
                     Console.ReadKey();
                     break;
                 }
-                case "2":
+                case "3":
                     tableManager.DisplayTables();
                     Console.Write("Press any key to continue...");
                     Console.ReadKey();
                     break;
-                case "3":
+                case "4":
                 {
                     var availableTables = tableManager.ListAvailableTables();
                     if (availableTables.Count > 0)
@@ -84,7 +92,7 @@ namespace RelaxingKoala
                     Console.ReadKey();
                     break;
                 }
-                case "4":
+                case "5":
                 {
                     Console.Write("Enter number of guests: ");
                     int guests = int.Parse(Console.ReadLine() ?? "");
@@ -101,14 +109,14 @@ namespace RelaxingKoala
                     Console.ReadKey();
                     break;
                 }
-                case "5":
+                case "6":
                     {
                         customer.Pay();
                         Console.Write("Press any key to continue...");
                         Console.ReadKey();
                         break;
                     }
-                case "6":
+                case "7":
                 {
                     exit = true;
                     break;
