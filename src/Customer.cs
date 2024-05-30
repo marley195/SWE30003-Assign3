@@ -30,7 +30,7 @@ namespace RelaxingKoala
             Console.WriteLine("Orders:");
             foreach (var order in Orders)
             {
-                Console.WriteLine($"   Order ID: {order.OrderId}, Total: ${order.TotalAmount}");
+                Console.WriteLine($"   Order ID: {order.OrderId}, Total: ${order.TotalAmount}, Amount Owed: ${order.AmountOwed}");
                 foreach (var item in order.Items)
                 {
                     Console.WriteLine($"      Item: {item.Name}, Price: ${item.Price}");
@@ -85,7 +85,7 @@ namespace RelaxingKoala
         {
             foreach (Order order in Orders)
             {
-                Console.WriteLine($"   Order ID: {order.OrderId}, Total: ${order.TotalAmount}");
+                Console.WriteLine($"   Order ID: {order.OrderId}, Total: ${order.TotalAmount}, Amount Owed: ${order.AmountOwed}");
                 foreach (var item in order.Items)
                 {
                     Console.WriteLine($"      Item: {item.Name}, Price: ${item.Price}");
