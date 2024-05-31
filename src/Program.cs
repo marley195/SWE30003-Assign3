@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using CsvHelper;
+﻿using System.Security.Cryptography;
 
 namespace RelaxingKoala
 {
@@ -90,55 +88,119 @@ namespace RelaxingKoala
                         }
                     case "3":
                         {
-                            Console.Write("Enter number of guests: ");
-                            int guest = int.Parse(Console.ReadLine() ?? "");
-                            Table? _table = tableManager.FindAvailableTable(guest, DateTime.Today);
-                            if (_table != null)
+                            Customer? customer = null;
+                            Table? _table = null;
+                            int guest;
+
+                            Console.WriteLine("----- Order Menu -----");
+                            Console.WriteLine("Do you have a reservation? (y/n)");
+
+                            if (Console.ReadLine()?.ToLower() == "y")
                             {
-                                Console.WriteLine("Table found\nEnter you name: ");
+                                Console.WriteLine("Enter your name: ");
                                 string name = Console.ReadLine() ?? "";
-                                Console.WriteLine("Enter your contact number: ");
-                                string contact = Console.ReadLine() ?? "";
-                                Customers.Add(new Customer(name, contact, "No requirements"));
-                                reservationManager.OccupyTable(Customers[Customers.Count-1], tableManager, DateTime.Now, guest);
-                                //take order
-                                Order order = new Order(Customers[Customers.Count-1].CustomerId);
-                                bool ordering = true;
-                                while (ordering)
+                                customer = Customers.FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+                                if (customer != null)
                                 {
-                                    Console.Clear();
-                                    menu.DisplayMenu();
-                                    Console.Write("Enter the Menu Item ID to add to order, or 'done' to finish: ");
-                                    string menuItemInput = Console.ReadLine() ?? "";
+                                    Console.WriteLine("Locating Reservation...");
+                                    var reservation = reservationManager.GetReservationByCustomer(customer.Name);
 
-                                    if (menuItemInput.ToLower() == "done")
+                                    if (reservation != null)
                                     {
-                                        Customers[Customers.Count-1].AddOrder(order);
-                                        Kitchen.Update(order);
-                                        ordering = false;
-                                        
+                                        _table = reservation.Table;
                                     }
-                                    else if (int.TryParse(menuItemInput, out int menuItemId))
+                                    else
                                     {
-                                        MenuItem? menuItem = menu.MenuItems.FirstOrDefault(item => item.MenuItemId == menuItemId);
-                                        if (menuItem != null)
-                                        {
-                                            order.AddItem(menuItem);
-                                            Console.WriteLine($"{menuItem.Name} added to order.");
-                                            Console.Write("Press any key to continue...");
-                                            Console.Read();
-
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine("Invalid Menu Item ID.");
-                                        }
+                                        Console.WriteLine("No reservation found. We'll need to reserve a table first.");
+                                        // continue to table reservation process
                                     }
                                 }
+                                else
+                                {
+                                    Console.WriteLine("Customer not found. Proceeding to table reservation...");
+                                }
                             }
-                            else
+
+                            if (customer == null || _table == null)
                             {
-                                Console.WriteLine("No tables available");
+                                Console.WriteLine("Reserving Table...");
+                                Console.Write("Enter number of guests: ");
+
+                                if (int.TryParse(Console.ReadLine(), out guest))
+                                {
+                                    _table = tableManager.FindAvailableTable(guest, DateTime.Today);
+
+                                    if (_table != null)
+                                    {
+                                        Console.WriteLine($"Table {_table.TableID} Reserved");
+
+                                        if (customer == null)
+                                        {
+                                            Console.WriteLine("Enter your name: ");
+                                            string name = Console.ReadLine() ?? "";
+
+                                            Console.WriteLine("Enter your contact number: ");
+                                            string contact = Console.ReadLine() ?? "";
+
+                                            customer = new Customer(name, contact, "No requirements");
+                                            Customers.Add(customer);
+                                        }
+
+                                        reservationManager.OccupyTable(customer, tableManager, DateTime.Now, guest);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("No tables available, Returning to Menu");
+                                        break; // exit the order process
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid input for number of guests.");
+                                    return; // exit the order process
+                                }
+                            }
+                            // Take order
+                            Order order = new Order(customer.CustomerId);
+                            bool ordering = true;
+
+                            while (ordering)
+                            {
+                                Console.Clear();
+                                menu.DisplayMenu();
+
+                                Console.Write("Enter the Menu Item ID to add to order, or 'done' to finish: ");
+                                string menuItemInput = Console.ReadLine() ?? "";
+
+                                if (menuItemInput.ToLower() == "done")
+                                {
+                                    customer.AddOrder(order);
+                                    Kitchen.Update(order);
+                                    ordering = false;
+                                    Console.WriteLine("Order completed and sent to the kitchen.");
+                                }
+                                else if (int.TryParse(menuItemInput, out int menuItemId))
+                                {
+                                    MenuItem? menuItem = menu.MenuItems.FirstOrDefault(item => item.MenuItemId == menuItemId);
+
+                                    if (menuItem != null)
+                                    {
+                                        order.AddItem(menuItem);
+                                        Console.WriteLine($"{menuItem.Name} added to order.");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Invalid Menu Item ID.");
+                                    }
+
+                                    Console.Write("Press any key to continue...");
+                                    Console.ReadKey();
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid Menu Item ID or 'done' to finish.");
+                                }
                             }
                             Console.Write("Press any key to continue...");
                             Console.Read();

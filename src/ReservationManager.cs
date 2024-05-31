@@ -51,9 +51,9 @@ namespace RelaxingKoala
             return Reservations.SingleOrDefault(res => res.ReservationId == reservationID);
         }
 
-        public Reservation? GetReservationByCustomer(int customerID)
+        public Reservation? GetReservationByCustomer(string customerName)
         {
-            return Reservations.SingleOrDefault(res => res.Customer.CustomerId == customerID);
+            return Reservations.SingleOrDefault(res => res.Customer.Name == customerName);
         }
     }
 }

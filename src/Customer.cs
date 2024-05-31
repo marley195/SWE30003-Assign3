@@ -1,5 +1,3 @@
-using System.Reflection.Metadata.Ecma335;
-
 namespace RelaxingKoala
 {
     public class Customer
@@ -32,7 +30,7 @@ namespace RelaxingKoala
         {
             Console.WriteLine($"Customer ID: {CustomerId}, Name: {Name}, Contact: {ContactNumber}");
             Console.Write("Reservations:");
-            Reservation? Reservations = reservationManager.GetReservationByCustomer(this.CustomerId);
+            Reservation? Reservations = reservationManager.GetReservationByCustomer(Name);
             if(Reservations != null)
             {
                 Console.WriteLine($" Reservation ID: {Reservations.ReservationId}, Table ID: {Reservations.Table.TableID}, Time: {Reservations.ReservationTime}, Guests: {Reservations.NumberOfGuests}");
