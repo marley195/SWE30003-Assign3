@@ -18,11 +18,16 @@ namespace RelaxingKoala
             string option;
             List<Customer> Customers = new List<Customer>();
             // Create sample data
+            Customer customer1 = new Customer("John Doe", "555-1234");
+            Order order = new Order(customer1.CustomerID);
             var item1 = new MenuItem(10, "Pasta");
             var item2 = new MenuItem(15, "Pizza");
             menu.AddMenuItem(item1);
             menu.AddMenuItem(item2);
-            Customers.Add(new Customer("John Doe", "555-1234"));
+            Customers.Add(customer1);
+            order.AddItem(item1);
+            customer1.AddOrder(order);
+            
             //Temporary to Generate Tables for testing
             for (int i = 0; i < 10; i++)
             {
