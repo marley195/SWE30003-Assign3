@@ -24,14 +24,13 @@ namespace RelaxingKoala
             menu.AddMenuItem(new MenuItem(5, "Ice Cream", MenuItem.FoodCategory.Dessert));
             menu.AddMenuItem(new MenuItem(5, "Soda", MenuItem.FoodCategory.Drink));
             menu.AddMenuItem(new MenuItem(15, "Wine", MenuItem.FoodCategory.Drink));
-            Customers.Add(new Customer("John Doe", "555-1234"));
             //Temporary to Generate Tables for testing
             for (int i = 0; i < 10; i++)
             {
                 tableManager.CreateTable(i, RandomNumberGenerator.GetInt32(2, 10));
             }
             //tableManager.readTables();
-
+            
             //Loop for Reservation + table system.
             while (!exit)
             {

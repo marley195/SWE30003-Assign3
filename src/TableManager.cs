@@ -1,7 +1,3 @@
-using System.Globalization;
-using CsvHelper;
-using CsvHelper.Configuration;
-
 namespace RelaxingKoala
 {
     public class TableManager
@@ -22,27 +18,6 @@ namespace RelaxingKoala
         public void RemoveTable(Table table)
         {
             tables.Remove(table);
-        }
-
- 
-
-        public void readTables()
-        {
-            if (!File.Exists("tables.csv"))
-            {
-                return;
-            }
-            using (var reader = new StreamReader("tables.csv"))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-            {
-                var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-                {
-                    HeaderValidated = null,
-                    MissingFieldFound = null
-                };
-                csv.Context.RegisterClassMap<TableMap>();
-                tables = csv.GetRecords<Table>().ToList();
-            }
         }
 
         //public void UpdateTableFile(Table table)
