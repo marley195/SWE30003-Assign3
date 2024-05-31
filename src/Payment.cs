@@ -47,7 +47,6 @@ namespace RelaxingKoala
                 if (invoice.InvoiceTotal > PaymentRemaining)
                 {
                     Console.WriteLine("Payment successfull for $" + InputAmount );
-                    Console.WriteLine("Payment Remaining: " + PaymentRemaining);
                 }
                 else if (PaymentRemaining == 0)
                 {

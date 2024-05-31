@@ -31,6 +31,15 @@ namespace RelaxingKoala
 
         }
 
+        public void FreeTable(int customerID)
+        {
+            Reservation? reservation = Reservations.SingleOrDefault(res => res.Customer.CustomerId == customerID);
+            if (reservation != null)
+            {
+                reservation.Table.TableStatus = Table.Status.Available;
+                Reservations.Remove(reservation);
+            }
+        }
 
         public void RemoveReservation(int reservationID)
         {

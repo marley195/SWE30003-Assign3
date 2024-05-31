@@ -101,7 +101,6 @@ namespace RelaxingKoala
                                 string contact = Console.ReadLine() ?? "";
                                 Customers.Add(new Customer(name, contact, "No requirements"));
                                 reservationManager.OccupyTable(Customers[Customers.Count-1], tableManager, DateTime.Now, guest);
-
                                 //take order
                                 Order order = new Order(Customers[Customers.Count-1].CustomerId);
                                 bool ordering = true;
@@ -205,7 +204,10 @@ namespace RelaxingKoala
                                     }
                                     else
                                     {
+                                        //Allows Order, Invoice and Payment to update status and complete payment process.
                                         customer.Pay(requiredOrder);
+                                        //Frees table after payment
+                                        reservationManager.FreeTable(requiredOrder.CustomerId);
                                     }
                                 }
                                 else
