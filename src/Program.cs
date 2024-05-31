@@ -25,7 +25,7 @@ namespace RelaxingKoala
             menu.AddMenuItem(new MenuItem(5, "Soda", MenuItem.FoodCategory.Drink));
             menu.AddMenuItem(new MenuItem(15, "Wine", MenuItem.FoodCategory.Drink));
             //Temporary to Generate Tables for testing
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 2; i++)
             {
                 tableManager.CreateTable(i, RandomNumberGenerator.GetInt32(2, 10));
             }
@@ -52,15 +52,24 @@ namespace RelaxingKoala
                 {
                     case "1":
                         {
-                            foreach(Customer customer1 in Customers)
+                            if (Customers.Count>0)
                             {
+                                foreach (Customer customer1 in Customers)
                                 {
-                                    customer1.DisplayCustomerDetails(reservationManager);
+                                    {
+                                        customer1.DisplayCustomerDetails(reservationManager);
 
+                                    }
                                 }
+
                             }
+                            else
+                            {
+                                Console.WriteLine("No customer details found");
+                            }
+                           
                             Console.WriteLine("Press any key to continue...");
-                            Console.Read();
+                            Console.ReadKey();
                             break;
                         }
                     case "2":
@@ -82,7 +91,7 @@ namespace RelaxingKoala
                                 Console.WriteLine("No tables available");
                             }
                             Console.Write("Press any key to continue...");
-                            Console.Read();
+                            Console.ReadKey();
                             break;
                         }
                     case "3":
@@ -202,7 +211,7 @@ namespace RelaxingKoala
                                 }
                             }
                             Console.Write("Press any key to continue...");
-                            Console.Read();
+                            Console.ReadKey();
                             break;
                         }
                     case "4":
