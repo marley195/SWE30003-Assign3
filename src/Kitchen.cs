@@ -21,6 +21,5 @@ namespace RelaxingKoala
             Console.WriteLine($"Order status is now '{order.OrderState}'");
             }
         }
-
     }
 }

@@ -1,3 +1,5 @@
+using System.Reflection.Metadata.Ecma335;
+
 namespace RelaxingKoala
 {
     public class Customer
@@ -34,7 +36,6 @@ namespace RelaxingKoala
             if(Reservations != null)
             {
                 Console.WriteLine($" Reservation ID: {Reservations.ReservationId}, Table ID: {Reservations.Table.TableID}, Time: {Reservations.ReservationTime}, Guests: {Reservations.NumberOfGuests}");
-
             }
             else { Console.WriteLine(" no reservations"); }
             if (Orders.Count>0)
@@ -48,51 +49,20 @@ namespace RelaxingKoala
                         Console.WriteLine($"      Item: {item.Name}, Price: ${item.Price}");
                     }
                 }
-
             }
-           
         }
 
-        public void Pay()
+        public Payment? Pay(Order order)
         {
-            int selectedOrder = 0;
-            Order requiredOrder = null;
-            decimal amount = 0;
-            DisplayOrders();
-            Console.WriteLine("Please select the order number you wish to pay for:");
-            if (int.TryParse(Console.ReadLine() ?? "0", out int result))
+            if (order.getAmountOwed == 0)
             {
-                selectedOrder = result;
-
-                foreach (Order order in Orders)
-                {
-                    if (order.OrderId == selectedOrder)
-                    {
-                        requiredOrder = order;
-                    }
-                }
-
-                if (requiredOrder == null)
-                {
-                    Console.WriteLine("That order could not be found");
-                }
-                else
-                {
-                    Console.WriteLine("Please input amount being paid:");
-                    if (decimal.TryParse(Console.ReadLine() ?? "0.0", out decimal result2))
-                    {
-                        amount = result2;
-                        requiredOrder.Pay((int)amount);
-                    }
-                    else
-                    {
-                        Console.WriteLine("A valid amount was not inputted. Please input an amount in the format dollars.cents with no special characters");
-                    }
-                }
+                Console.WriteLine("No payment required. Order has already been paid for.");
+                return null;
             }
             else
             {
-                Console.WriteLine("A valid order ID was not submitted.");
+
+                return order.Pay();
             }
         }
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography;
 
 namespace RelaxingKoala
@@ -8,7 +9,14 @@ namespace RelaxingKoala
         private List<IObserver> observers;
         private int AmountOwed = 0;
         private static int nextorderId = 0;
+        public int OrderId { get; set; }
+        public int CustomerId { get; set; }
+        public State OrderState { get; set; }
+        public List<MenuItem> Items { get; set; } = new List<MenuItem>();
+        public int TotalAmount => Items.Sum(item => item.Price);
         public enum State { OrderPlaced, OrderProcessed, OrderCompleted, OrderCancelled };
+
+
         public Order( int customerId)
         {
             OrderId = nextorderId++;
@@ -33,38 +41,24 @@ namespace RelaxingKoala
             }
         }
 
-
-        public State OrderState { get; set; }
-
-        public int OrderId { get; set; }
-        public int CustomerId { get; set; }
-        public List<MenuItem> Items { get; set; } = new List<MenuItem>();
-        public int TotalAmount => Items.Sum(item => item.Price);
-
         public void AddItem(MenuItem item)
         {
             Items.Add(item);
             AmountOwed += item.Price;
         }
 
-        public void Pay(int amount)
+        public Payment Pay()
         {
-            AmountOwed -= amount;
-            if (AmountOwed < 0)
-            {
-                decimal extraAmount = AmountOwed * -1;
-                AmountOwed = 0;
-                Console.WriteLine($"The price has been overpayed. ${extraAmount} has been returned to you.");
-            }
-            CreateInvoice();
+            Invoice invoice = this.CreateInvoice();
+            return invoice.pay();
         }
 
-        public void CreateInvoice()
+        public Invoice CreateInvoice()
         {
-            int invoiceID = RandomNumberGenerator.GetInt32(2, 10);
-            Invoice invoice = new Invoice(invoiceID, OrderId, AmountOwed);
-            invoice.DisplayInvoiceDetails();
+            Console.WriteLine($"Invoice has been created for {this.OrderId}");
+            return new Invoice(this);
         }
+
         public int getAmountOwed
         {
             get { return AmountOwed; }

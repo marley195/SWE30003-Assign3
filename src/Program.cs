@@ -13,15 +13,19 @@ namespace RelaxingKoala
             ReservationManager reservationManager = new ReservationManager();
             TableManager tableManager = new TableManager();
             Menu menu = new Menu();
+            Kitchen Kitchen = new Kitchen();
 
             bool exit = false;
             string option;
             List<Customer> Customers = new List<Customer>();
             // Create sample data
-            var item1 = new MenuItem(10, "Pasta");
-            var item2 = new MenuItem(15, "Pizza");
-            menu.AddMenuItem(item1);
-            menu.AddMenuItem(item2);
+            menu.AddMenuItem(new MenuItem(10, "Burger", MenuItem.FoodCategory.MainCourse));
+            menu.AddMenuItem(new MenuItem(5, "Fries", MenuItem.FoodCategory.Appetizer));
+            menu.AddMenuItem(new MenuItem(15, "Steak", MenuItem.FoodCategory.MainCourse));
+            menu.AddMenuItem(new MenuItem(5, "Salad", MenuItem.FoodCategory.Appetizer));
+            menu.AddMenuItem(new MenuItem(5, "Ice Cream", MenuItem.FoodCategory.Dessert));
+            menu.AddMenuItem(new MenuItem(5, "Soda", MenuItem.FoodCategory.Drink));
+            menu.AddMenuItem(new MenuItem(15, "Wine", MenuItem.FoodCategory.Drink));
             Customers.Add(new Customer("John Doe", "555-1234"));
             //Temporary to Generate Tables for testing
             for (int i = 0; i < 10; i++)
@@ -111,7 +115,9 @@ namespace RelaxingKoala
                                     if (menuItemInput.ToLower() == "done")
                                     {
                                         Customers[Customers.Count-1].AddOrder(order);
+                                        Kitchen.Update(order);
                                         ordering = false;
+                                        
                                     }
                                     else if (int.TryParse(menuItemInput, out int menuItemId))
                                     {
@@ -182,7 +188,35 @@ namespace RelaxingKoala
                         }
                     case "7":
                         {
-                            //customer.Pay();
+                            Console.WriteLine($"Select a customer to pay for an order: {String.Join(", ", Customers.Select(c => c.Name))}");
+                            string customerName = Console.ReadLine() ?? "";
+                            Customer? customer = Customers.FirstOrDefault(c => c.Name.Equals(customerName, StringComparison.OrdinalIgnoreCase));
+                            if (customer != null)
+                            {
+                                customer.DisplayOrders();
+                                Console.WriteLine("Please select the order number you wish to pay for:");
+                                if (int.TryParse(Console.ReadLine() ?? "0", out int selectedOrder))
+                                {
+                                    Order? requiredOrder = customer.Orders.FirstOrDefault(order => order.OrderId == selectedOrder);
+
+                                    if (requiredOrder == null)
+                                    {
+                                        Console.WriteLine("That order could not be found");
+                                    }
+                                    else
+                                    {
+                                        customer.Pay(requiredOrder);
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("A valid order ID was not submitted.");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Customer not found");
+                            }
                             Console.Write("Press any key to continue...");
                             Console.ReadKey();
                             break;
