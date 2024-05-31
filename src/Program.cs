@@ -297,7 +297,6 @@ namespace RelaxingKoala
                         }
                     case "8":
                         {
-                            Console.WriteLine("checkcheck");
                             menu.DisplayMenu();
                             Console.Write("Press any key to continue...");
                             Console.Read();
