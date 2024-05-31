@@ -30,7 +30,7 @@ namespace RelaxingKoala
                 tableManager.CreateTable(i, RandomNumberGenerator.GetInt32(2, 10));
             }
             //tableManager.readTables();
-            
+
             //Loop for Reservation + table system.
             while (!exit)
             {
@@ -253,7 +253,18 @@ namespace RelaxingKoala
                             Customer? customer = Customers.FirstOrDefault(c => c.Name.Equals(customerName, StringComparison.OrdinalIgnoreCase));
                             if (customer != null)
                             {
-                                customer.DisplayOrders();
+                                string result = customer.DisplayUnpaidOrders();
+                                if (result == "")
+                                {
+                                    Console.WriteLine("No unpaid orders found.");
+                                    Console.Write("Press any key to continue...");
+                                    Console.Read();
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine(result);
+                                }
                                 Console.WriteLine("Please select the order number you wish to pay for:");
                                 if (int.TryParse(Console.ReadLine() ?? "0", out int selectedOrder))
                                 {
