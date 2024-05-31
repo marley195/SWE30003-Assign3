@@ -19,7 +19,6 @@ namespace RelaxingKoala
             string option;
             List<Customer> Customers = new List<Customer>();
             // Create sample data
-            Customer customer = new Customer("John Doe", "555-1234");
             menu.AddMenuItem(new MenuItem(10, "Burger", MenuItem.FoodCategory.MainCourse));
             menu.AddMenuItem(new MenuItem(5, "Fries", MenuItem.FoodCategory.Appetizer));
             menu.AddMenuItem(new MenuItem(15, "Steak", MenuItem.FoodCategory.MainCourse));
@@ -27,8 +26,7 @@ namespace RelaxingKoala
             menu.AddMenuItem(new MenuItem(5, "Ice Cream", MenuItem.FoodCategory.Dessert));
             menu.AddMenuItem(new MenuItem(5, "Soda", MenuItem.FoodCategory.Drink));
             menu.AddMenuItem(new MenuItem(15, "Wine", MenuItem.FoodCategory.Drink));
-            Customers.Add(customer);
-            
+            Customers.Add(new Customer("John Doe", "555-1234"));
             //Temporary to Generate Tables for testing
             for (int i = 0; i < 10; i++)
             {
@@ -44,14 +42,13 @@ namespace RelaxingKoala
                 Console.WriteLine("Please select an option:");
                 Console.WriteLine("1. Show Customer Details");
                 Console.WriteLine("2. Reserve Table");
-                Console.WriteLine("3. Show Menu");
-                Console.WriteLine("4. Place an order");
-                Console.WriteLine("5. Display Tables");
-                Console.WriteLine("6. List Available Tables");
-                Console.WriteLine("7. Find Available Table");
-                Console.WriteLine("8. Pay For An Order");
-                Console.WriteLine("9. Display Menu");
-                Console.WriteLine("10. Exit");
+                Console.WriteLine("3. Place an order");
+                Console.WriteLine("4. Display Tables");
+                Console.WriteLine("5. List Available Tables");
+                Console.WriteLine("6. Find Available Table");
+                Console.WriteLine("7. Pay For An Order");
+                Console.WriteLine("8. Display Menu");
+                Console.WriteLine("9. Exit");
                 Console.Write("Select an option: ");
                 option = Console.ReadLine() ?? "";
                 switch (option)
@@ -66,7 +63,7 @@ namespace RelaxingKoala
                                 }
                             }
                             Console.WriteLine("Press any key to continue...");
-                            Console.ReadKey();
+                            Console.Read();
                             break;
                         }
                     case "2":
@@ -88,17 +85,10 @@ namespace RelaxingKoala
                                 Console.WriteLine("No tables available");
                             }
                             Console.Write("Press any key to continue...");
-                            Console.ReadKey();
+                            Console.Read();
                             break;
                         }
                     case "3":
-                        {
-                            menu.DisplayMenu();
-                            Console.Write("Press any key to continue...");
-                            Console.ReadKey();
-                            break;
-                        }
-                    case "4":
                         {
                             Console.Write("Enter number of guests: ");
                             int guest = int.Parse(Console.ReadLine() ?? "");
@@ -137,7 +127,7 @@ namespace RelaxingKoala
                                             order.AddItem(menuItem);
                                             Console.WriteLine($"{menuItem.Name} added to order.");
                                             Console.Write("Press any key to continue...");
-                                            Console.ReadKey();
+                                            Console.Read();
 
                                         }
                                         else
@@ -152,15 +142,15 @@ namespace RelaxingKoala
                                 Console.WriteLine("No tables available");
                             }
                             Console.Write("Press any key to continue...");
-                            Console.ReadKey();
+                            Console.Read();
                             break;
                         }
-                    case "5":
+                    case "4":
                         tableManager.DisplayTables();
                         Console.Write("Press any key to continue...");
-                        Console.ReadKey();
+                        Console.Read();
                         break;
-                    case "6":
+                    case "5":
                         {
                             var availableTables = tableManager.ListAvailableTables();
                             if (availableTables.Count > 0)
@@ -176,10 +166,10 @@ namespace RelaxingKoala
                                 Console.WriteLine("No tables available");
                             }
                             Console.Write("Press any key to continue...");
-                            Console.ReadKey();
+                            Console.Read();
                             break;
                         }
-                    case "7":
+                    case "6":
                         {
                             Console.Write("Enter number of guests: ");
                             int guests = int.Parse(Console.ReadLine() ?? "");
@@ -193,10 +183,10 @@ namespace RelaxingKoala
                                 Console.WriteLine("No tables available");
                             }
                             Console.Write("Press any key to continue...");
-                            Console.ReadKey();
+                            Console.Read();
                             break;
                         }
-                    case "8":
+                    case "7":
                         {
                             Console.WriteLine($"Select a customer to pay for an order: {String.Join(", ", Customers.Select(c => c.Name))}");
                             string customerName = Console.ReadLine() ?? "";
@@ -228,18 +218,18 @@ namespace RelaxingKoala
                                 Console.WriteLine("Customer not found");
                             }
                             Console.Write("Press any key to continue...");
-                            Console.ReadKey();
+                            Console.Read();
                             break;
                         }
-                    case "9":
+                    case "8":
                         {
                             Console.WriteLine("checkcheck");
                             menu.DisplayMenu();
                             Console.Write("Press any key to continue...");
-                            Console.ReadKey();
+                            Console.Read();
                             break;
                         }
-                    case "10":
+                    case "9":
                         {
                             exit = true;
                             break;
@@ -248,7 +238,7 @@ namespace RelaxingKoala
                         {
                             Console.WriteLine("Invalid option");
                             Console.Write("Press any key to continue...");
-                            Console.ReadKey();
+                            Console.Read();
                             break;
                         }
                 }
@@ -256,5 +246,4 @@ namespace RelaxingKoala
         }
     }
 }
-
 

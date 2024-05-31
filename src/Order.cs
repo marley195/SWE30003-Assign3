@@ -50,12 +50,13 @@ namespace RelaxingKoala
         public Payment Pay()
         {
             Invoice invoice = this.CreateInvoice();
+            this.OrderState = State.OrderCompleted;
             return invoice.pay();
         }
 
         public Invoice CreateInvoice()
         {
-            Console.WriteLine($"Invoice has been created for {this.OrderId}");
+            Console.WriteLine($"Invoice has been created for OrderID: {this.OrderId}");
             return new Invoice(this);
         }
 
