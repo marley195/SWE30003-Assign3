@@ -76,6 +76,24 @@ namespace RelaxingKoala
             }
         }
 
+
+        public string DisplayUnpaidOrders()
+        {
+            string result = "";
+            foreach (Order order in Orders)
+            {
+                if (order.OrderState != Order.State.OrderCompleted)
+                {
+                    result = ($"   Order ID: {order.OrderId}, Total: ${order.TotalAmount}, Amount Owed: ${order.getAmountOwed}");
+                    foreach (var item in order.Items)
+                    {
+                        result += $"      Item: {item.Name}, Price: ${item.Price}";
+                    }
+                }
+            }
+            return result;
+        }
+
         public Customer? GetCustomerByID(int customerID)
         {
             if (CustomerId == customerID)

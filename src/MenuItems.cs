@@ -19,6 +19,6 @@ namespace RelaxingKoala
         public int MenuItemId { get; private set; }
         public int Price { get; set; }
         public string Name { get; set; }
-        private FoodCategory Category { get; set; }
+        public FoodCategory Category { get; set; }
     }
 }
